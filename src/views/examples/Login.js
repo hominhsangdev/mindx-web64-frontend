@@ -38,12 +38,26 @@ import {
 import DemoNavbar from "components/Navbars/DemoNavbar.js";
 import SimpleFooter from "components/Footers/SimpleFooter.js";
 
+import axios from 'axios';
+
 class Login extends React.Component {
   componentDidMount() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     this.refs.main.scrollTop = 0;
+    console.log("user:",this.state.user);
   }
+
+  constructor(props) {
+    super(props);
+    this.state={
+      user: {
+        email: "mindx@gmail.com",
+        password: "12345678"
+      }
+    }
+  }
+
   render() {
     return (
       <>
@@ -117,7 +131,12 @@ class Login extends React.Component {
                                 <i className="ni ni-email-83" />
                               </InputGroupText>
                             </InputGroupAddon>
-                            <Input placeholder="Email" type="email" />
+                            <Input placeholder="Email" type="email" onChange={(resp) => {
+                              //console.log("email:" , resp.target.value);
+                              this.setState({
+                                user: { ...this.state.user , email : resp.target.value}
+                              });
+                            } } />
                           </InputGroup>
                         </FormGroup>
                         <FormGroup>
@@ -131,6 +150,13 @@ class Login extends React.Component {
                               placeholder="Password"
                               type="password"
                               autoComplete="off"
+                              onChange={(resp) => {
+                                //console.log(resp.target.value);
+                                this.setState({
+                                  user:  { ...this.state.user ,  password: resp.target.value}
+                                });
+
+                              }}
                             />
                           </InputGroup>
                         </FormGroup>
@@ -139,6 +165,7 @@ class Login extends React.Component {
                             className="custom-control-input"
                             id=" customCheckLogin"
                             type="checkbox"
+                            
                           />
                           <label
                             className="custom-control-label"
@@ -152,6 +179,15 @@ class Login extends React.Component {
                             className="my-4"
                             color="primary"
                             type="button"
+                            onClick={async () => {
+                              console.log("Signin");
+                              await axios.post("http://localhost:4000/auth/login", this.state.user).then((resp) => {
+                                console.log(resp);
+                                if(resp.data.jwt){
+                                  this.props.history.push('/landing-page');
+                                }
+                              })
+                            }}
                           >
                             Sign in
                           </Button>
