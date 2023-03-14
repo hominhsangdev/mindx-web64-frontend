@@ -41,11 +41,16 @@ import SimpleFooter from "components/Footers/SimpleFooter.js";
 import axios from 'axios';
 
 class Login extends React.Component {
+  
   componentDidMount() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     this.refs.main.scrollTop = 0;
     console.log("user:",this.state.user);
+  }
+
+  componentDidUpdate(){
+
   }
 
   constructor(props) {
@@ -175,7 +180,8 @@ class Login extends React.Component {
                           </label>
                         </div>
                         <div className="text-center">
-                          <Button
+                          {this.state.user && (
+                            <Button
                             className="my-4"
                             color="primary"
                             type="button"
@@ -191,6 +197,7 @@ class Login extends React.Component {
                           >
                             Sign in
                           </Button>
+                          )}
                         </div>
                       </Form>
                     </CardBody>
