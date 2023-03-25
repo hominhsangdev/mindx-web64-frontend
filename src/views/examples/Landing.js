@@ -42,14 +42,47 @@ import CardsFooter from "components/Footers/CardsFooter.js";
 
 // index page sections
 import Download from "../IndexSections/Download.js";
+import axios from "axios";
 
 class Landing extends React.Component {
   state = {};
-  componentDidMount() {
+  products = [];
+  async checkToken() {
+    const token = await localStorage.getItem("token");
+    if (token) {
+      this.setState({ ...this.state, token: token });
+      return true;
+    }
+    return false;
+  }
+
+  checkToken2 = async () => {
+    return true;
+  }
+
+  async componentDidMount() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     this.refs.main.scrollTop = 0;
+    await this.checkToken();
+    await this.getProducts();
+
   }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      products: this.products
+    }
+  }
+
+  getProducts = async () => {
+    const data = await axios.get("https://dummyjson.com/products");
+    this.products = data.data.products;
+    this.setState({ ...this.state, products: this.products })
+    console.log(this.products);
+  }
+
   render() {
     return (
       <>
@@ -69,21 +102,22 @@ class Landing extends React.Component {
                 <span />
                 <span />
               </div>
-              <Container className="py-lg-md d-flex">
-                <div className="col px-0">
-                  <Row>
-                    <Col lg="6">
-                      <h1 className="display-3 text-white">
-                        A beautiful Design System{" "}
-                        <span>completed with examples</span>
-                      </h1>
-                      <p className="lead text-white">
-                        The design system comes with four pre-built pages to
-                        help you get started faster. You can change the text and
-                        images and you're good to go.
-                      </p>
-                      <div className="btn-wrapper">
-                        <Button
+              {!this.state.token && (
+                <Container className="py-lg-md d-flex">
+                  <div className="col px-0">
+                    <Row>
+                      <Col lg="6">
+                        <h1 className="display-3 text-white">
+                          A beautiful Design System{" "}
+                          <span>completed with examples</span>
+                        </h1>
+                        <p className="lead text-white">
+                          The design system comes with four pre-built pages to
+                          help you get started faster. You can change the text and
+                          images and you're good to go.
+                        </p>
+                        <div className="btn-wrapper">
+                          {/* <Button
                           className="btn-icon mb-3 mb-sm-0"
                           color="info"
                           href="https://demos.creative-tim.com/argon-design-system-react/#/documentation/alerts?ref=adsr-landing-page"
@@ -92,24 +126,25 @@ class Landing extends React.Component {
                             <i className="fa fa-code" />
                           </span>
                           <span className="btn-inner--text">Components</span>
-                        </Button>
-                        <Button
-                          className="btn-white btn-icon mb-3 mb-sm-0 ml-1"
-                          color="default"
-                          href="https://www.creative-tim.com/product/argon-design-system-react?ref=adsr-landing-page"
-                        >
-                          <span className="btn-inner--icon mr-1">
-                            <i className="ni ni-cloud-download-95" />
-                          </span>
-                          <span className="btn-inner--text">
-                            Download React
-                          </span>
-                        </Button>
-                      </div>
-                    </Col>
-                  </Row>
-                </div>
-              </Container>
+                        </Button> */}
+                          <Button
+                            className="btn-white btn-icon mb-3 mb-sm-0 ml-1"
+                            color="default"
+                            href="https://www.creative-tim.com/product/argon-design-system-react?ref=adsr-landing-page"
+                          >
+                            <span className="btn-inner--icon mr-1">
+                              <i className="ni ni-cloud-download-95" />
+                            </span>
+                            <span className="btn-inner--text">
+                              Please sign in to view our products !
+                            </span>
+                          </Button>
+                        </div>
+                      </Col>
+                    </Row>
+                  </div>
+                </Container>
+              )}
               {/* SVG separator */}
               <div className="separator separator-bottom separator-skew">
                 <svg
@@ -129,124 +164,185 @@ class Landing extends React.Component {
             </section>
             {/* 1st Hero Variation */}
           </div>
-          <section className="section section-lg pt-lg-0 mt--200">
-            <Container>
-              <Row className="justify-content-center">
-                <Col lg="12">
-                  <Row className="row-grid">
-                    <Col lg="4">
-                      <Card className="card-lift--hover shadow border-0">
-                        <CardBody className="py-5">
-                          <div className="icon icon-shape icon-shape-primary rounded-circle mb-4">
-                            <i className="ni ni-check-bold" />
-                          </div>
-                          <h6 className="text-primary text-uppercase">
-                            Download Argon
-                          </h6>
-                          <p className="description mt-3">
-                            Argon is a great free UI package based on Bootstrap
-                            4 that includes the most important components and
-                            features.
-                          </p>
-                          <div>
-                            <Badge color="primary" pill className="mr-1">
-                              design
-                            </Badge>
-                            <Badge color="primary" pill className="mr-1">
-                              system
-                            </Badge>
-                            <Badge color="primary" pill className="mr-1">
-                              creative
-                            </Badge>
-                          </div>
-                          <Button
-                            className="mt-4"
-                            color="primary"
-                            href="#pablo"
-                            onClick={(e) => e.preventDefault()}
-                          >
-                            Learn more
-                          </Button>
-                        </CardBody>
-                      </Card>
-                    </Col>
-                    <Col lg="4">
-                      <Card className="card-lift--hover shadow border-0">
-                        <CardBody className="py-5">
-                          <div className="icon icon-shape icon-shape-success rounded-circle mb-4">
-                            <i className="ni ni-istanbul" />
-                          </div>
-                          <h6 className="text-success text-uppercase">
-                            Build Something
-                          </h6>
-                          <p className="description mt-3">
-                            Argon is a great free UI package based on Bootstrap
-                            4 that includes the most important components and
-                            features.
-                          </p>
-                          <div>
-                            <Badge color="success" pill className="mr-1">
-                              business
-                            </Badge>
-                            <Badge color="success" pill className="mr-1">
-                              vision
-                            </Badge>
-                            <Badge color="success" pill className="mr-1">
-                              success
-                            </Badge>
-                          </div>
-                          <Button
-                            className="mt-4"
-                            color="success"
-                            href="#pablo"
-                            onClick={(e) => e.preventDefault()}
-                          >
-                            Learn more
-                          </Button>
-                        </CardBody>
-                      </Card>
-                    </Col>
-                    <Col lg="4">
-                      <Card className="card-lift--hover shadow border-0">
-                        <CardBody className="py-5">
-                          <div className="icon icon-shape icon-shape-warning rounded-circle mb-4">
-                            <i className="ni ni-planet" />
-                          </div>
-                          <h6 className="text-warning text-uppercase">
-                            Prepare Launch
-                          </h6>
-                          <p className="description mt-3">
-                            Argon is a great free UI package based on Bootstrap
-                            4 that includes the most important components and
-                            features.
-                          </p>
-                          <div>
-                            <Badge color="warning" pill className="mr-1">
-                              marketing
-                            </Badge>
-                            <Badge color="warning" pill className="mr-1">
-                              product
-                            </Badge>
-                            <Badge color="warning" pill className="mr-1">
-                              launch
-                            </Badge>
-                          </div>
-                          <Button
-                            className="mt-4"
-                            color="warning"
-                            href="#pablo"
-                            onClick={(e) => e.preventDefault()}
-                          >
-                            Learn more
-                          </Button>
-                        </CardBody>
-                      </Card>
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
-            </Container>
-          </section>
+          {this.state.token && (
+            <section className="section section-lg pt-lg-0 mt--200">
+              <Container>
+                <Row className="justify-content-center">
+                  <Col lg="12">
+                    <Row className="row-grid">
+                      {/* <Col lg="4">
+                        <Card className="card-lift--hover shadow border-0">
+                          <CardBody className="py-5">
+                            <div className="icon icon-shape icon-shape-primary rounded-circle mb-4">
+                              <i className="ni ni-check-bold" />
+                            </div>
+                            <h6 className="text-primary text-uppercase">
+                              PC Gaming
+                            </h6>
+                            <p className="description mt-3">
+                              10.000.000 vnd
+                              <br />
+                              DELL Optiplex 7440
+                            </p>
+                            <div>
+                              <Badge color="primary" pill className="mr-1">
+                                CPU i5 10500H
+                              </Badge>
+                              <Badge color="primary" pill className="mr-1">
+                                16Gb RAM
+                              </Badge>
+                              <Badge color="primary" pill className="mr-1">
+                                500Gb SSD
+                              </Badge>
+                            </div>
+                            <Button
+                              className="mt-4"
+                              color="primary"
+                              href="#pablo"
+                              onClick={(e) => e.preventDefault()}
+                            >
+                              Click to buy
+                            </Button>
+                          </CardBody>
+                        </Card>
+                      </Col>
+                      <Col lg="4">
+                        <Card className="card-lift--hover shadow border-0">
+                          <CardBody className="py-5">
+                            <div className="icon icon-shape icon-shape-success rounded-circle mb-4">
+                              <i className="ni ni-istanbul" />
+                            </div>
+                            <h6 className="text-success text-uppercase">
+                              ASUS Monitor
+                            </h6>
+                            <p className="description mt-3">
+                              7.000.000
+                              <br />
+                              16:9 Full HD - IPS
+                            </p>
+                            <div>
+                              <Badge color="success" pill className="mr-1">
+                                32 inch
+                              </Badge>
+                              <Badge color="success" pill className="mr-1">
+                                2 HDMI
+                              </Badge>
+                              <Badge color="success" pill className="mr-1">
+                                144Hz
+                              </Badge>
+                            </div>
+                            <Button
+                              className="mt-4"
+                              color="success"
+                              href="#pablo"
+                              onClick={(e) => e.preventDefault()}
+                            >
+                              Click to buy
+                            </Button>
+                          </CardBody>
+                        </Card>
+                      </Col>
+                      <Col lg="4">
+                        <Card className="card-lift--hover shadow border-0">
+                          <CardBody className="py-5">
+                            <div className="icon icon-shape icon-shape-warning rounded-circle mb-4">
+                              <i className="ni ni-planet" />
+                            </div>
+                            <h6 className="text-warning text-uppercase">
+                              Mouse & Keyboard Combo
+                            </h6>
+                            <p className="description mt-3">
+                              5.000.000
+                              <br />
+                              Logitech Bluetooth Mouse & KeyChron Keyboard
+                            </p>
+                            <div>
+                              <Badge color="warning" pill className="mr-1">
+                                Full led
+                              </Badge>
+                              <Badge color="warning" pill className="mr-1">
+                                BLE 5.0
+                              </Badge>
+                              <Badge color="warning" pill className="mr-1">
+                                IP67
+                              </Badge>
+                            </div>
+                            <Button
+                              className="mt-4"
+                              color="warning"
+                              href="#pablo"
+                              onClick={(e) => e.preventDefault()}
+                            >
+                              Click to buy
+                            </Button>
+                          </CardBody>
+                        </Card>
+                      </Col> */}
+                      {this.state.products && this.state.products.map((item, idx) => (
+                        <Col lg="4" style={{marginBottom: 30}}>
+                          <Card className="card-lift--hover shadow border-0">
+                            <CardBody className="py-5">
+                              {/* <div className="icon icon-shape icon-shape-warning rounded-circle mb-4">
+                                <i className="ni ni-planet" />
+                              </div> */}
+                              <h6 className="text-warning text-uppercase">
+                                {item.brand} - {item.category}
+                              </h6>
+                              <p className="description mt-3">
+                                5.000.000
+                                <br />
+                                Logitech Bluetooth Mouse & KeyChron Keyboard
+                              </p>
+                              {/* <div>
+                                <Badge color="warning" pill className="mr-1">
+                                  Full led
+                                </Badge>
+                                <Badge color="warning" pill className="mr-1">
+                                  BLE 5.0
+                                </Badge>
+                                <Badge color="warning" pill className="mr-1">
+                                  IP67
+                                </Badge>
+                              </div> */}
+                              <img width={150} height={150} src={item.thumbnail} style={{margin: 5, borderRadius: 20}}/>
+                              <Button
+                                className="mt-4"
+                                color="warning"
+                                href="#pablo"
+                                onClick={(e) => {
+                                  let product=item;
+                                  product.rating++;
+                                  let new_products = this.state.products;
+                                  new_products[idx] = product;
+                                  this.setState({...this.state,products: new_products})
+                                }}
+                              >
+                                Like - {item.rating}
+                              </Button>
+                              <Button
+                                className="mt-4"
+                                color="warning"
+                                href="#pablo"
+                                onClick={(e) => {
+                                  let product=item;
+                                  product.rating--;
+                                  let new_products = this.state.products;
+                                  new_products[idx] = product;
+                                  this.setState({...this.state,products: new_products})
+                                }}
+                              >
+                                Dislike - {item.rating}
+                              </Button>
+                            </CardBody>
+                          </Card>
+                        </Col>
+                      ))}
+                    </Row>
+                  </Col>
+                </Row>
+              </Container>
+            </section>
+          )}
           <section className="section section-lg">
             <Container>
               <Row className="row-grid align-items-center">

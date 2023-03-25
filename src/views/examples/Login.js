@@ -16,6 +16,7 @@
 
 */
 import React from "react";
+import { useReducer } from "react";
 
 // reactstrap components
 import {
@@ -187,10 +188,11 @@ class Login extends React.Component {
                             type="button"
                             onClick={async () => {
                               console.log("Signin");
-                              await axios.post("http://localhost:4000/auth/login", this.state.user).then((resp) => {
+                              await axios.post("http://localhost:4000/auth/login", this.state.user).then(async (resp) => {
                                 console.log(resp);
-                                if(resp.data.jwt){
+                                if(resp.data.token){
                                   this.props.history.push('/landing-page');
+                                  await localStorage.setItem("token",resp.data.token);
                                 }
                               })
                             }}

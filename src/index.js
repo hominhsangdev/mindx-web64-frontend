@@ -28,6 +28,8 @@ import Landing from "views/examples/Landing.js";
 import Login from "views/examples/Login.js";
 import Profile from "views/examples/Profile.js";
 import Register from "views/examples/Register.js";
+import Todos from "views/examples/ToDo";
+import Categories from "views/examples/Categories";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -54,6 +56,16 @@ root.render(
         path="/register-page"
         exact
         render={(props) => <Register {...props} />}
+      />
+      <Route
+        path="/todo-page"
+        exact
+        render={(props) => <Todos {...props} />}
+      />
+      <Route
+        path="/categories-page"
+        exact
+        render={(props) => <Categories {...props} />}
       />
       <Redirect to="/" />
     </Switch>

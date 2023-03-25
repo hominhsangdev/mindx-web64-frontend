@@ -37,13 +37,52 @@ import {
 // core components
 import DemoNavbar from "components/Navbars/DemoNavbar.js";
 import SimpleFooter from "components/Footers/SimpleFooter.js";
+import axios from "axios";
 
 class Register extends React.Component {
+
   componentDidMount() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     this.refs.main.scrollTop = 0;
   }
+  constructor(props) {
+    super(props);
+    this.state = {
+      user: {
+        email: "",
+        password: "",
+        confirmedPassword: "",
+      },
+      message: null
+    }
+  }
+
+  handleEmailInput(event) {
+    console.log(event.target.value);
+  }
+
+  handlePasswordInput = (event) => {
+    console.log(event.target.value);
+  }
+
+  handleConfirmedPassword = (event) => {
+    console.log(event.target.value);
+
+  }
+
+  handleFormChange = (event) => {
+    const key = event.target.name;
+    const value = event.target.value;
+    if (key === "email") {
+      this.setState({ ...this.state, user: { ...this.state.user, email: value } })
+    } else if (key === "password") {
+      this.setState({ ...this.state,user: { ...this.state.user, password: value } })
+    } else if (key === "confirmedPassword") {
+      this.setState({ ...this.state, user: { ...this.state.user, confirmedPassword: value } })
+    }
+  }
+
   render() {
     return (
       <>
@@ -117,7 +156,7 @@ class Register extends React.Component {
                                 <i className="ni ni-hat-3" />
                               </InputGroupText>
                             </InputGroupAddon>
-                            <Input placeholder="Name" type="text" />
+                            <Input name="email" placeholder="Email" type="text" onChange={this.handleFormChange} />
                           </InputGroup>
                         </FormGroup>
                         <FormGroup>
@@ -127,7 +166,7 @@ class Register extends React.Component {
                                 <i className="ni ni-email-83" />
                               </InputGroupText>
                             </InputGroupAddon>
-                            <Input placeholder="Email" type="email" />
+                            <Input name="password" placeholder="Password" type="password" onChange={this.handleFormChange} />
                           </InputGroup>
                         </FormGroup>
                         <FormGroup>
@@ -138,9 +177,11 @@ class Register extends React.Component {
                               </InputGroupText>
                             </InputGroupAddon>
                             <Input
-                              placeholder="Password"
+                              name="confirmedPassword"
+                              placeholder="Confirmed Password"
                               type="password"
                               autoComplete="off"
+                              onChange={this.handleFormChange}
                             />
                           </InputGroup>
                         </FormGroup>
@@ -149,6 +190,14 @@ class Register extends React.Component {
                             password strength:{" "}
                             <span className="text-success font-weight-700">
                               strong
+                            </span>
+                          </small>
+                        </div>
+                        <div className="text-muted font-italic">
+                          <small>
+                            
+                            <span className="text-danger font-weight-700">
+                              {this.state.message}
                             </span>
                           </small>
                         </div>
@@ -182,6 +231,26 @@ class Register extends React.Component {
                             className="mt-4"
                             color="primary"
                             type="button"
+                            onClick={() => {
+                              console.log(this.state.user);
+                              if(!this.state.user.email 
+                                || !this.state.user.password 
+                                || !this.state.user.confirmedPassword 
+                                || (this.state.user.password != this.state.user.confirmedPassword))
+                              {
+                                this.setState({...this.state, message: "Invalid information !"})
+                                return;
+                              }
+
+                              this.setState({...this.state, message: ""});
+
+                              axios.post("http://localhost:4000/auth/register",this.state.user).then((resp)=>{
+                                if(resp.status == 200){
+                                  this.props.history.push("/login-page")
+                                };
+                                //if(resp.)
+                              })
+                            }}
                           >
                             Create account
                           </Button>
